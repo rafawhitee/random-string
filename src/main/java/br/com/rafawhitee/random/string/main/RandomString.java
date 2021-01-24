@@ -58,7 +58,6 @@ public class RandomString {
 	private void validarCaracteresEspeciais() {
 		if (Objects.isNull(caracteresEspeciaisRestricoes) || caracteresEspeciaisRestricoes.isEmpty())
 			return;
-
 		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getCaracteresEspeciais(), caracteresEspeciaisRestricoes,
 				NOME_CHAR_ESPECIAL);
 	}
@@ -88,7 +87,6 @@ public class RandomString {
 	private void validarMaiusculas() {
 		if (Objects.isNull(maiusculasRestricoes) || maiusculasRestricoes.isEmpty())
 			return;
-
 		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getLetrasMaiusculas(), maiusculasRestricoes, NOME_MAIUSCULA);
 	}
 
@@ -107,7 +105,6 @@ public class RandomString {
 	private void validarMinusculas() {
 		if (Objects.isNull(minusculasRestricoes) || minusculasRestricoes.isEmpty())
 			return;
-
 		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getLetrasMinusculas(), minusculasRestricoes, NOME_MINUSCULA);
 	}
 
@@ -126,7 +123,6 @@ public class RandomString {
 	private void validarNumeros() {
 		if (Objects.isNull(numerosRestricoes) || numerosRestricoes.isEmpty())
 			return;
-
 		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getNumeros(), numerosRestricoes, NOME_NUMERO);
 	}
 
@@ -157,6 +153,7 @@ public class RandomString {
 		int tamanhoSenha = configuracao.getTamanho();
 		validarTamanhoSenha(tamanhoSenha);
 		popularListaCaractere();
+		validarSePodeFazerForParaRandomizar();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < tamanhoSenha; i++) {
 			int indexAleatorioAtual = randomizarIndex();
@@ -167,6 +164,17 @@ public class RandomString {
 		}
 		inicializarValoresPadroes();
 		return sb.toString();
+	}
+
+	private void validarSePodeFazerForParaRandomizar() {
+		int quantidadeQuePodeRepetir = configuracao.getMaximoDeRepeticoesPermitidas();
+		int tamanhoRandomEscolhido = configuracao.getTamanho();
+		int tamanhoDaLista = caracteres.size();
+		int tamanhoFinalDaLista = (quantidadeQuePodeRepetir <= 0) ? tamanhoDaLista
+				: (tamanhoDaLista * (quantidadeQuePodeRepetir + 1));
+		if (tamanhoFinalDaLista < tamanhoRandomEscolhido)
+			throw new RuntimeException(
+					"Lista escolhida pequena, escolha: mais configuração / diminuir o tamanho da string / colocar quantidade para repetição maior");
 	}
 
 	private void popularListaCaractere() {
