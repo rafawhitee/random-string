@@ -15,7 +15,7 @@ public class RandomString {
 	private static final String NOME_CHAR_ESPECIAL = "Caractere especial";
 	private static final String NOME_NUMERO = "Número";
 
-	private final ConfigRandomString configuracao;
+	private ConfigRandomString configuracao;
 	private List<Character> caracteres;
 	private List<Integer> indexesJaInseridos;
 
@@ -27,24 +27,23 @@ public class RandomString {
 
 	// Construtor
 	public RandomString() {
-		this.configuracao = new ConfigRandomString();
 		inicializarValoresPadroes();
 	}
 
 	public RandomString(int tamanho) {
 		inicializarValoresPadroes();
-		this.configuracao = new ConfigRandomString();
 		configuracao.setTamanho(tamanho);
 	}
 
 	private void inicializarValoresPadroes() {
+		this.configuracao = new ConfigRandomString();
 		this.caracteres = new ArrayList<Character>();
 		this.indexesJaInseridos = new ArrayList<Integer>();
 	}
 
 	/* Métodos para manipular a Config */
-	public RandomString caracteresEspeciais(boolean caracteresEspeciais) {
-		this.configuracao.setCaracteresEspeciais(caracteresEspeciais);
+	public RandomString caracteresEspeciais() {
+		this.configuracao.setCaracteresEspeciais(true);
 		return this;
 	}
 
@@ -63,8 +62,8 @@ public class RandomString {
 				NOME_CHAR_ESPECIAL);
 	}
 
-	public RandomString uuid(boolean uuid) {
-		this.configuracao.setUuid(uuid);
+	public RandomString uuid() {
+		this.configuracao.setUuid(true);
 		return this;
 	}
 
@@ -73,8 +72,8 @@ public class RandomString {
 		return this;
 	}
 
-	public RandomString maiusculas(boolean maiusculas) {
-		this.configuracao.setMaiusculas(maiusculas);
+	public RandomString maiusculas() {
+		this.configuracao.setMaiusculas(true);
 		return this;
 	}
 
@@ -92,8 +91,8 @@ public class RandomString {
 		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getLetrasMaiusculas(), maiusculasRestricoes, NOME_MAIUSCULA);
 	}
 
-	public RandomString minusculas(boolean minusculas) {
-		this.configuracao.setMinusculas(minusculas);
+	public RandomString minusculas() {
+		this.configuracao.setMinusculas(true);
 		return this;
 	}
 
@@ -111,8 +110,8 @@ public class RandomString {
 		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getLetrasMinusculas(), minusculasRestricoes, NOME_MINUSCULA);
 	}
 
-	public RandomString numeros(boolean numeros) {
-		this.configuracao.setNumeros(numeros);
+	public RandomString numeros() {
+		this.configuracao.setNumeros(true);
 		return this;
 	}
 
@@ -149,8 +148,10 @@ public class RandomString {
 	}
 
 	public String random() {
-		if (configuracao.isUuid())
+		if (configuracao.isUuid()) {
+			inicializarValoresPadroes();
 			return createUiidString();
+		}
 
 		int tamanhoSenha = configuracao.getTamanho();
 		validarTamanhoSenha(tamanhoSenha);
@@ -161,6 +162,7 @@ public class RandomString {
 			indexesJaInseridos.add(indexAleatorioAtual);
 			sb.append(getCaractere(indexAleatorioAtual));
 		}
+		inicializarValoresPadroes();
 		return sb.toString();
 	}
 
