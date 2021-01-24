@@ -133,8 +133,8 @@ public class RandomString {
 	/* PRIVATE's */
 	private void verificarCaractereNaListaAsciiDisponivel(List<Character> listaAscii, List<Character> listaEscolhida,
 			String tipo) {
-		for (Character currentCharFor : listaAscii) {
-			if (!listaEscolhida.contains(currentCharFor))
+		for (Character currentCharEscolhida : listaEscolhida) {
+			if (!listaAscii.contains(currentCharEscolhida))
 				throw new RuntimeException(tipo + " inválido");
 		}
 	}
