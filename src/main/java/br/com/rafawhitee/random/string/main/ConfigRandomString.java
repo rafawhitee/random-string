@@ -11,7 +11,9 @@ public class ConfigRandomString {
 	private boolean minusculas;
 	private boolean caracteresEspeciais;
 	private boolean numeros;
-	private int tamanhoSenha;
+	private boolean uuid;
+	private int tamanho;
+	private int maximoDeRepeticoesPermitidas;
 	private List<Integer> numerosDisponiveis;
 
 	public ConfigRandomString() {
@@ -23,8 +25,9 @@ public class ConfigRandomString {
 	}
 
 	private void popularDefaults() {
-		this.tamanhoSenha = 6;
+		this.tamanho = 6;
 		this.numerosDisponiveis = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+		this.maximoDeRepeticoesPermitidas = 1;
 	}
 
 	public List<String> retornaNumerosDisponiveisComoString() {
@@ -64,18 +67,18 @@ public class ConfigRandomString {
 		return numeros;
 	}
 
-	public int getTamanhoSenha() {
-		return tamanhoSenha;
+	public int getTamanho() {
+		return tamanho;
 	}
 
-	public void setTamanhoSenha(int tamanhoSenha) {
-		this.tamanhoSenha = tamanhoSenha;
-		validarTamanhoSenha();
+	public void setTamanho(int tamanho) {
+		this.tamanho = tamanho;
+		validarTamanho();
 	}
 
-	private void validarTamanhoSenha() {
-		if (tamanhoSenha <= 0)
-			throw new RuntimeException("O tamanho da senha não pode ser igual ou menor que 0");
+	private void validarTamanho() {
+		if (tamanho <= 0)
+			throw new RuntimeException("O tamanho da não pode ser igual ou menor que 0");
 	}
 
 	public List<Integer> getNumerosDisponiveis() {
@@ -88,6 +91,25 @@ public class ConfigRandomString {
 
 	public void setNumeros(boolean numeros) {
 		this.numeros = numeros;
+	}
+
+	public int getMaximoDeRepeticoesPermitidas() {
+		return maximoDeRepeticoesPermitidas;
+	}
+
+	public void setMaximoDeRepeticoesPermitidas(int maximoDeRepeticoesPermitidas) {
+		if (maximoDeRepeticoesPermitidas <= 0)
+			throw new RuntimeException("maximoDeRepeticoesPermitidas can't be 0 or less");
+
+		this.maximoDeRepeticoesPermitidas = maximoDeRepeticoesPermitidas;
+	}
+
+	public boolean isUuid() {
+		return uuid;
+	}
+
+	public void setUuid(boolean uuid) {
+		this.uuid = uuid;
 	}
 
 }

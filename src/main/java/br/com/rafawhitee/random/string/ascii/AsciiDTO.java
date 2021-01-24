@@ -1,29 +1,30 @@
 package br.com.rafawhitee.random.string.ascii;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class AsciiDTO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
-	private String caractere;
+	private Character caractere;
     private Short index;
 
-    public AsciiDTO (String caractere, Short index){
+    public AsciiDTO (Character caractere, Short index){
         this.caractere = caractere;
         this.index = index;
     }
 
-    public AsciiDTO (String caractere, Integer index){
+    public AsciiDTO (Character caractere, Integer index){
         this.caractere = caractere;
         this.index = (index != null) ? index.shortValue() : null;
     }
 
-    public String getCaractere() {
+    public Character getCaractere() {
         return caractere;
     }
 
-    public void setCaractere(String caractere) {
+    public void setCaractere(Character caractere) {
         this.caractere = caractere;
     }
 
@@ -37,11 +38,7 @@ public class AsciiDTO implements Serializable {
 
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((caractere == null) ? 0 : caractere.hashCode());
-		result = prime * result + ((index == null) ? 0 : index.hashCode());
-		return result;
+		return Objects.hash(caractere, index);
 	}
 
 	@Override
@@ -64,6 +61,15 @@ public class AsciiDTO implements Serializable {
 		} else if (!index.equals(other.index))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Caractere : " + caractere);
+		sb.append(" - ");
+		sb.append("Index Ascii: " + index);
+		return sb.toString();
 	}
 
 }

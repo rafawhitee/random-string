@@ -2,57 +2,159 @@ package br.com.rafawhitee.random.string.main;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.stream.Collectors;
 
-import br.com.rafawhitee.random.string.ascii.AsciiDTO;
 import br.com.rafawhitee.random.string.ascii.AsciiUtil;
 
 public class RandomString {
 
-	private ConfigRandomString configuracao;
-	private List<String> caracteres;
-	private List<AsciiDTO> tabelaAsciiDTO;
+	private static final String NOME_MINUSCULA = "Letra minúscula";
+	private static final String NOME_MAIUSCULA = "Letra maiúscula";
+	private static final String NOME_CHAR_ESPECIAL = "Caractere especial";
+	private static final String NOME_NUMERO = "Número";
+
+	private final ConfigRandomString configuracao;
+	private List<Character> caracteres;
 	private List<Integer> indexesJaInseridos;
 
+	// Listas para restrições
+	private List<Character> caracteresEspeciaisRestricoes;
+	private List<Character> numerosRestricoes;
+	private List<Character> maiusculasRestricoes;
+	private List<Character> minusculasRestricoes;
+
 	// Construtor
-	public RandomString(ConfigRandomString configuracao) {
-		this.configuracao = configuracao;
-		validarConfiguracao();
-		this.tabelaAsciiDTO = retornaTabelaAsciiDTO();
+	public RandomString() {
+		this.configuracao = new ConfigRandomString();
+		inicializarValoresPadroes();
+	}
+
+	public RandomString(int tamanho) {
+		inicializarValoresPadroes();
+		this.configuracao = new ConfigRandomString();
+		configuracao.setTamanho(tamanho);
+	}
+
+	private void inicializarValoresPadroes() {
+		this.caracteres = new ArrayList<Character>();
 		this.indexesJaInseridos = new ArrayList<Integer>();
-		popularListaCaractere(configuracao.isNumeros());
 	}
 
-	private void validarConfiguracao() {
-		if (configuracao == null)
-			throw new RuntimeException("Configuração do RandomPassword está nulo");
+	/* Métodos para manipular a Config */
+	public RandomString caracteresEspeciais(boolean caracteresEspeciais) {
+		this.configuracao.setCaracteresEspeciais(caracteresEspeciais);
+		return this;
 	}
 
-	public ConfigRandomString getConfiguracao() {
-		return configuracao;
+	public RandomString caracteresEspeciais(List<Character> caracteresEspeciais) {
+		this.configuracao.setCaracteresEspeciais(true);
+		this.caracteresEspeciaisRestricoes = caracteresEspeciais;
+		validarCaracteresEspeciais();
+		return this;
 	}
 
-	public void setConfiguracao(ConfigRandomString configuracao) {
-		this.configuracao = configuracao;
+	private void validarCaracteresEspeciais() {
+		if (Objects.isNull(caracteresEspeciaisRestricoes) || caracteresEspeciaisRestricoes.isEmpty())
+			return;
+
+		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getCaracteresEspeciais(), caracteresEspeciaisRestricoes,
+				NOME_CHAR_ESPECIAL);
 	}
 
-	private void popularListaCaractere(boolean numeros) {
-		caracteres = new ArrayList<String>();
-		List<String> asciiDTOCaracteres = tabelaAsciiDTO.stream().map(a -> a.getCaractere())
-				.collect(Collectors.toList());
-		caracteres.addAll(asciiDTOCaracteres);
+	public RandomString uuid(boolean uuid) {
+		this.configuracao.setUuid(uuid);
+		return this;
+	}
 
-		if (numeros)
-			caracteres.addAll(configuracao.retornaNumerosDisponiveisComoString());
+	public RandomString tamanho(int tamanho) {
+		this.configuracao.setTamanho(tamanho);
+		return this;
+	}
+
+	public RandomString maiusculas(boolean maiusculas) {
+		this.configuracao.setMaiusculas(maiusculas);
+		return this;
+	}
+
+	public RandomString maiusculas(List<Character> maiusculas) {
+		this.configuracao.setMaiusculas(true);
+		this.maiusculasRestricoes = maiusculas;
+		validarMaiusculas();
+		return this;
+	}
+
+	private void validarMaiusculas() {
+		if (Objects.isNull(maiusculasRestricoes) || maiusculasRestricoes.isEmpty())
+			return;
+
+		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getLetrasMaiusculas(), maiusculasRestricoes, NOME_MAIUSCULA);
+	}
+
+	public RandomString minusculas(boolean minusculas) {
+		this.configuracao.setMinusculas(minusculas);
+		return this;
+	}
+
+	public RandomString minusculas(List<Character> minusculas) {
+		this.configuracao.setMinusculas(true);
+		this.minusculasRestricoes = minusculas;
+		validarMinusculas();
+		return this;
+	}
+
+	private void validarMinusculas() {
+		if (Objects.isNull(minusculasRestricoes) || minusculasRestricoes.isEmpty())
+			return;
+
+		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getLetrasMinusculas(), minusculasRestricoes, NOME_MINUSCULA);
+	}
+
+	public RandomString numeros(boolean numeros) {
+		this.configuracao.setNumeros(numeros);
+		return this;
+	}
+
+	public RandomString numeros(List<Character> numeros) {
+		this.configuracao.setNumeros(true);
+		numerosRestricoes = numeros;
+		validarNumeros();
+		return this;
+	}
+
+	private void validarNumeros() {
+		if (Objects.isNull(numerosRestricoes) || numerosRestricoes.isEmpty())
+			return;
+
+		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getNumeros(), numerosRestricoes, NOME_NUMERO);
+	}
+
+	/* PRIVATE's */
+	private void verificarCaractereNaListaAsciiDisponivel(List<Character> listaAscii, List<Character> listaEscolhida,
+			String tipo) {
+		for (Character currentCharFor : listaAscii) {
+			if (!listaEscolhida.contains(currentCharFor))
+				throw new RuntimeException(tipo + " inválido");
+		}
+	}
+
+	private UUID createUuid() {
+		return UUID.randomUUID();
+	}
+
+	private String createUiidString() {
+		UUID uuid = createUuid();
+		return uuid.toString();
 	}
 
 	public String random() {
-		return random(configuracao.getTamanhoSenha());
-	}
+		if (configuracao.isUuid())
+			return createUiidString();
 
-	public String random(int tamanhoSenha) {
+		int tamanhoSenha = configuracao.getTamanho();
 		validarTamanhoSenha(tamanhoSenha);
+		popularListaCaractere();
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < tamanhoSenha; i++) {
 			int indexAleatorioAtual = randomizarIndex();
@@ -62,29 +164,97 @@ public class RandomString {
 		return sb.toString();
 	}
 
-	private List<AsciiDTO> retornaTabelaAsciiDTO() {
-		List<AsciiDTO> tabelaAsciiDTO = new ArrayList<AsciiDTO>();
-		if (configuracao.isMaiusculas())
-			tabelaAsciiDTO.addAll(AsciiUtil.getLetrasMaiusculas());
-
-		if (configuracao.isMinusculas())
-			tabelaAsciiDTO.addAll(AsciiUtil.getLetrasMinusculas());
-
-		if (configuracao.isCaracteresEspeciais())
-			tabelaAsciiDTO.addAll(AsciiUtil.getCaracteresEspeciais());
-
-		return tabelaAsciiDTO;
+	private void popularListaCaractere() {
+		caracteres = new ArrayList<Character>();
+		popularMaiusculasSeSelecionado();
+		popularMinusculasSeSelecionado();
+		popularCaracteresEspeciaisSeSelecionado();
+		popularNumerosSeSelecionado();
+		validarListaCaracteres();
 	}
 
-	private int randomizarIndex() {
+	private void popularMaiusculasSeSelecionado() {
+		if (configuracao.isMaiusculas()) {
+			if (Objects.nonNull(maiusculasRestricoes) && !maiusculasRestricoes.isEmpty())
+				caracteres.addAll(maiusculasRestricoes);
+			else
+				caracteres.addAll(AsciiUtil.getLetrasMaiusculas());
+		}
+	}
+
+	private void popularMinusculasSeSelecionado() {
+		if (configuracao.isMinusculas()) {
+			if (Objects.nonNull(minusculasRestricoes) && !minusculasRestricoes.isEmpty())
+				caracteres.addAll(minusculasRestricoes);
+			else
+				caracteres.addAll(AsciiUtil.getLetrasMinusculas());
+		}
+	}
+
+	private void popularCaracteresEspeciaisSeSelecionado() {
+		if (configuracao.isCaracteresEspeciais()) {
+			if (Objects.nonNull(caracteresEspeciaisRestricoes) && !caracteresEspeciaisRestricoes.isEmpty())
+				caracteres.addAll(caracteresEspeciaisRestricoes);
+			else
+				caracteres.addAll(AsciiUtil.getCaracteresEspeciais());
+		}
+	}
+
+	private void popularNumerosSeSelecionado() {
+		if (configuracao.isNumeros()) {
+			if (Objects.nonNull(numerosRestricoes) && !numerosRestricoes.isEmpty())
+				caracteres.addAll(numerosRestricoes);
+			else
+				caracteres.addAll(AsciiUtil.getNumeros());
+		}
+	}
+
+	private void validarListaCaracteres() {
+		if (Objects.nonNull(caracteres) && caracteres.isEmpty())
+			caracteres.addAll(AsciiUtil.getTodos());
+	}
+
+	private Integer randomizarIndex() {
 		int indexFinal = caracteres.size() - 1;
-		boolean contains = true;
-		int numeroAleatorio = -1;
-		while (contains) {
+		Integer numeroAleatorio = fazerLoopParaRandom(indexFinal);
+		return numeroAleatorio;
+	}
+
+	private Integer fazerLoopParaRandom(int indexFinal) {
+		Integer numeroAleatorio = null;
+		while (true) {
 			numeroAleatorio = ThreadLocalRandom.current().nextInt(0, indexFinal);
-			contains = indexesJaInseridos.contains(numeroAleatorio);
+			boolean continuaLoop = continuaLoopParaRandom(numeroAleatorio);
+			if (!continuaLoop)
+				break;
 		}
 		return numeroAleatorio;
+	}
+
+	private boolean continuaLoopParaRandom(int numeroAleatorio) {
+		boolean contains = jaInserido(numeroAleatorio);
+		boolean podeRepetir = podeRepetir();
+		if (contains && podeRepetir) {
+			int quantidadeJaInserida = retornaQuantidadeJaInseridaDoIndex(numeroAleatorio);
+			if (quantidadeJaInserida < this.configuracao.getMaximoDeRepeticoesPermitidas())
+				contains = false;
+		}
+		return contains;
+	}
+
+	private boolean jaInserido(int numeroAleatorio) {
+		return indexesJaInseridos.contains(numeroAleatorio);
+	}
+
+	private boolean podeRepetir() {
+		return Objects.nonNull(configuracao) && configuracao.getMaximoDeRepeticoesPermitidas() > 1;
+	}
+
+	private int retornaQuantidadeJaInseridaDoIndex(int numeroAleatorio) {
+		if (Objects.nonNull(indexesJaInseridos))
+			return (int) indexesJaInseridos.stream().filter(index -> index.intValue() == numeroAleatorio).count();
+
+		return -1;
 	}
 
 	private void validarTamanhoSenha(int tamanhoSenha) {
@@ -92,32 +262,8 @@ public class RandomString {
 			throw new RuntimeException("O tamanho da senha não pode ser igual ou menor que 0");
 	}
 
-	private String getCaractere(int index) {
-		return (caracteres != null && caracteres.size() > 0) ? caracteres.get(index) : null;
-	}
-
-	public List<String> getCaracteres() {
-		return caracteres;
-	}
-
-	public void setCaracteres(List<String> caracteres) {
-		this.caracteres = caracteres;
-	}
-
-	public List<AsciiDTO> getTabelaAsciiDTO() {
-		return tabelaAsciiDTO;
-	}
-
-	public void setTabelaAsciiDTO(List<AsciiDTO> tabelaAsciiDTO) {
-		this.tabelaAsciiDTO = tabelaAsciiDTO;
-	}
-
-	public List<Integer> getIndexesJaInseridos() {
-		return indexesJaInseridos;
-	}
-
-	public void setIndexesJaInseridos(List<Integer> indexesJaInseridos) {
-		this.indexesJaInseridos = indexesJaInseridos;
+	private Character getCaractere(int index) {
+		return (Objects.nonNull(caracteres) && !caracteres.isEmpty()) ? caracteres.get(index) : null;
 	}
 
 }
