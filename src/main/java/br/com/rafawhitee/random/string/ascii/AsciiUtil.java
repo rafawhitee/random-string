@@ -92,9 +92,16 @@ public abstract class AsciiUtil {
 		List<AsciiDTO> retorno = new ArrayList<AsciiDTO>();
 		adicionar(retorno, '!', 33);
 		adicionar(retorno, '#', 35);
-		adicionar(retorno, '$', 37);
-		adicionar(retorno, '#', 38);
-		adicionar(retorno, '&', 66);
+		adicionar(retorno, '$', 36);
+		adicionar(retorno, '%', 37);
+		adicionar(retorno, '&', 38);
+		adicionar(retorno, '*', 42);
+		adicionar(retorno, '+', 43);
+		adicionar(retorno, '/', 47);
+		adicionar(retorno, '?', 63);
+		adicionar(retorno, '_', 95);
+		adicionar(retorno, '|', 124);
+		adicionar(retorno, '~', 126);
 		return retorno;
 	}
 

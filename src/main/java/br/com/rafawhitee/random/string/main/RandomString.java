@@ -37,6 +37,7 @@ public class RandomString {
 
 	private void inicializarValoresPadroes() {
 		this.configuracao = new ConfigRandomString();
+		this.configuracao.setMaximoDeRepeticoesPermitidas(1);
 		this.caracteres = new ArrayList<Character>();
 		this.indexesJaInseridos = new ArrayList<Integer>();
 	}
@@ -159,8 +160,10 @@ public class RandomString {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < tamanhoSenha; i++) {
 			int indexAleatorioAtual = randomizarIndex();
-			indexesJaInseridos.add(indexAleatorioAtual);
-			sb.append(getCaractere(indexAleatorioAtual));
+			if (indexAleatorioAtual >= 0) {
+				indexesJaInseridos.add(indexAleatorioAtual);
+				sb.append(getCaractere(indexAleatorioAtual));
+			}
 		}
 		inicializarValoresPadroes();
 		return sb.toString();

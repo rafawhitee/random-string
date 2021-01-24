@@ -1,10 +1,5 @@
 package br.com.rafawhitee.random.string.main;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-
 public class ConfigRandomString {
 
 	private boolean maiusculas;
@@ -14,7 +9,6 @@ public class ConfigRandomString {
 	private boolean uuid;
 	private int tamanho;
 	private int maximoDeRepeticoesPermitidas;
-	private List<Integer> numerosDisponiveis;
 
 	public ConfigRandomString() {
 		popularDefaults();
@@ -26,17 +20,7 @@ public class ConfigRandomString {
 
 	private void popularDefaults() {
 		this.tamanho = 6;
-		this.numerosDisponiveis = Arrays.asList(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
 		this.maximoDeRepeticoesPermitidas = 1;
-	}
-
-	public List<String> retornaNumerosDisponiveisComoString() {
-		if (numerosDisponiveis != null && numerosDisponiveis.size() > 0) {
-			List<String> numerosComoString = numerosDisponiveis.stream().map(numero -> String.valueOf(numero))
-					.collect(Collectors.toList());
-			return numerosComoString;
-		}
-		return new ArrayList<String>();
 	}
 
 	public boolean isMaiusculas() {
@@ -81,14 +65,6 @@ public class ConfigRandomString {
 			throw new RuntimeException("O tamanho da não pode ser igual ou menor que 0");
 	}
 
-	public List<Integer> getNumerosDisponiveis() {
-		return numerosDisponiveis;
-	}
-
-	public void setNumerosDisponiveis(List<Integer> numerosDisponiveis) {
-		this.numerosDisponiveis = numerosDisponiveis;
-	}
-
 	public void setNumeros(boolean numeros) {
 		this.numeros = numeros;
 	}
@@ -98,8 +74,8 @@ public class ConfigRandomString {
 	}
 
 	public void setMaximoDeRepeticoesPermitidas(int maximoDeRepeticoesPermitidas) {
-		if (maximoDeRepeticoesPermitidas <= 0)
-			throw new RuntimeException("maximoDeRepeticoesPermitidas can't be 0 or less");
+		if (maximoDeRepeticoesPermitidas < 0)
+			throw new RuntimeException("maximoDeRepeticoesPermitidas tem que ser maior ou igual a 0");
 
 		this.maximoDeRepeticoesPermitidas = maximoDeRepeticoesPermitidas;
 	}
