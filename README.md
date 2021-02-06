@@ -58,5 +58,5 @@ Você pode juntar várias configurações, como por exemplo
 RandomString rs = new RandomString();
 String resultWithSpecialCharsAndSize8 = rs.tamanho(8).caracteresEspeciais().random();
 String resultWithSpecialCharsAndSize8 = rs.tamanho(8).caracteresEspeciais().random();
- String resultUpperCaseSize15AndSpecialChars = rs.maiusculas().tamanho(15).caracteresEspeciais().random();
+String resultUpperCaseSize15AndSpecialChars = rs.maiusculas().tamanho(15).caracteresEspeciais().random();
 ```
