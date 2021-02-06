@@ -18,41 +18,41 @@ private int maximoDeRepeticoesPermitidas; // Se poderá repetir algum caractere 
 
 Os caracteres especiais que RandomString pode incluir no resultado são: <b> ! # $ % & * + / ? _ | ~ </b>
 
-Todas as configurações
+## Todas as configurações
 Caso você inicialize o Random String e chame direto o random, ele irá colocar todas as configurações como true.
 ```java
 RandomString rs = new RandomString();
 String resultWithAllConfigs = rs.random();
 ```
 
-Tamanho
+## Tamanho
 ```java
 RandomString rs = new RandomString();
 String resultWithSize5 = rs.tamanho(5).random();
 String resultWithSize12 = rs.tamanho(12).random();
 ```
 
-Maiúsculas e Minúsculas
+## Maiúsculas e Minúsculas
 ```java
 RandomString rs = new RandomString();
 String resultUpperCase = rs.maiusculas().random();
 String resultLowerCase = rs.minusculas().random();
 ```
 
-UUID
+## UUID
 Vai criar um Identificador Único Global (UUID da classe java.util) no formato em String, ele irá ignorar as outras configurações (tamanho mínimo, tamanho máximo, etc).
 ```java
 RandomString rs = new RandomString();
 String resultUuid = rs.uuid().random();
 ```
 
-Caracteres Especiais
+## Caracteres Especiais
 ```java
 RandomString rs = new RandomString();
 String resultWithSpecialChars = rs.caracteresEspeciais().random();
 ```
 
-Agrupando várias configurações
+## Agrupando várias configurações
 Você pode juntar várias configurações, como por exemplo
 ```java
 RandomString rs = new RandomString();
