@@ -68,11 +68,16 @@ String resultWithSpecialCharsAndSize8 = rs.tamanho(8).caracteresEspeciais().rand
 String resultLowerCaseSize15AndSpecialChars = rs.minusculas().tamanho(15).caracteresEspeciais().random();
 ```
 
-### Restrições
+## Restrições
 Você pode alterar os caracteres especiais, minúsculos ou maiúsculas com restrições, por exemplo, se você quiser criar uma String que contenha somente os caracteres especiais # e $ ou as letras maiúsculas A, B, C e D.
 ```java
 RandomString rs = new RandomString();
 String randomWithRestrictionOne = rs.maiusculas(Arrays.asList('A', 'B', 'C', 'D')).caracteresEspeciais(Arrays.asList('#', '$')).repetir(2).random();
+
+List<Character> restrictionsUpperCase = Arrays.asList('A', 'B', 'C', 'D');
+List<Character> restrictionsLowerCase = Arrays.asList('z', 'b', 'k', 'l', 'x');
+List<Character> restrictionsSpecialChars = Arrays.asList('&');
+String randomWithRestrictionTwo = rs.maiusculas(restrictionsUpperCase).minusculas(restrictionsLowerCase).caracteresEspeciais(restrictionsSpecialChars).random();(caracteresEspeciais(restrictionsSpecialChars).random();
 ```
 
 <b> Observação:</b> como já mencionado o default do tamanho é 6, se você passar uma lista com restrições menor que o tamanho FINAL e sem repetição, irá ser lançado uma Exception falando que não é possível randomizar por falta de caractere.
@@ -89,4 +94,10 @@ String randomExceptionTwo = rs.maiusculas(Arrays.asList('A')).tamanho(2).random(
 // Irá lançar também Exception, pois está passando o caractere minúsculo 'a' como parâmetro de restrição para maiusculas, irá lançar que é um Caractere Inválido.
 String randomExceptionThree = rs.maiusculas(Arrays.asList('a')).tamanho(1).random();
 ```
+
+## Contributing
+Rafael Nunes e Silva - Analista de Sistemas e Desenvolvedor Java
+
+## License
+MIT
 
