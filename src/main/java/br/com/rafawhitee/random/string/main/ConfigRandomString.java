@@ -20,7 +20,7 @@ public class ConfigRandomString {
 
 	private void popularDefaults() {
 		this.tamanho = 6;
-		this.maximoDeRepeticoesPermitidas = 1;
+		this.maximoDeRepeticoesPermitidas = 0;
 	}
 
 	public boolean isMaiusculas() {

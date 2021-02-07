@@ -17,6 +17,7 @@ public class RandomString {
 
 	private ConfigRandomString configuracao;
 	private List<Character> caracteres;
+	private List<Character> caracteresDisponiveis;
 	private List<Integer> indexesJaInseridos;
 
 	// Listas para restrições
@@ -37,7 +38,6 @@ public class RandomString {
 
 	private void inicializarValoresPadroes() {
 		this.configuracao = new ConfigRandomString();
-		this.configuracao.setMaximoDeRepeticoesPermitidas(1);
 		this.caracteres = new ArrayList<Character>();
 		this.indexesJaInseridos = new ArrayList<Integer>();
 	}
@@ -61,7 +61,12 @@ public class RandomString {
 		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getCaracteresEspeciais(), caracteresEspeciaisRestricoes,
 				NOME_CHAR_ESPECIAL);
 	}
-
+	
+	public RandomString repetir(int maximoDeRepeticoes) {
+		this.configuracao.setMaximoDeRepeticoesPermitidas(maximoDeRepeticoes);
+		return this;
+	}
+	
 	public RandomString uuid() {
 		this.configuracao.setUuid(true);
 		return this;
@@ -85,9 +90,9 @@ public class RandomString {
 	}
 
 	private void validarMaiusculas() {
-		if (Objects.isNull(maiusculasRestricoes) || maiusculasRestricoes.isEmpty())
-			return;
-		verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getLetrasMaiusculas(), maiusculasRestricoes, NOME_MAIUSCULA);
+		if (Objects.nonNull(maiusculasRestricoes) || !maiusculasRestricoes.isEmpty())
+			verificarCaractereNaListaAsciiDisponivel(AsciiUtil.getLetrasMaiusculas(), maiusculasRestricoes,
+					NOME_MAIUSCULA);
 	}
 
 	public RandomString minusculas() {
@@ -131,7 +136,7 @@ public class RandomString {
 			String tipo) {
 		for (Character currentCharEscolhida : listaEscolhida) {
 			if (!listaAscii.contains(currentCharEscolhida))
-				throw new RuntimeException(tipo + " inválido");
+				throw new RuntimeException(tipo + " inválido(a)");
 		}
 	}
 
@@ -159,11 +164,19 @@ public class RandomString {
 			int indexAleatorioAtual = randomizarIndex();
 			if (indexAleatorioAtual >= 0) {
 				indexesJaInseridos.add(indexAleatorioAtual);
-				sb.append(getCaractere(indexAleatorioAtual));
+				Character escolhido = getCaractere(indexAleatorioAtual);
+				removerEscolhidoDosDisponiveis(escolhido);
+				sb.append(escolhido);
 			}
 		}
 		inicializarValoresPadroes();
 		return sb.toString();
+	}
+
+	private void removerEscolhidoDosDisponiveis(Character escolhido) {
+		if (Objects.nonNull(escolhido) && Objects.nonNull(caracteresDisponiveis) && !caracteresDisponiveis.isEmpty()) {
+			caracteresDisponiveis.remove(escolhido);
+		}
 	}
 
 	private void validarSePodeFazerForParaRandomizar() {
@@ -184,6 +197,23 @@ public class RandomString {
 		popularCaracteresEspeciaisSeSelecionado();
 		popularNumerosSeSelecionado();
 		validarListaCaracteres();
+		popularListaCaracteresDisponiveis();
+	}
+
+	private void popularListaCaracteresDisponiveis() {
+		caracteresDisponiveis = new ArrayList<>();
+		if (Objects.nonNull(caracteres) && !caracteres.isEmpty()) {
+			caracteresDisponiveis.addAll(caracteres);
+			inserirQuantidadeDisponivieisParaRepeticao();
+		}
+	}
+	
+	private void inserirQuantidadeDisponivieisParaRepeticao() {
+		if(podeRepetir()) {
+			for(int i = 0 ; i < configuracao.getMaximoDeRepeticoesPermitidas() ; i++) {
+				caracteresDisponiveis.addAll(caracteres);
+			}
+		}
 	}
 
 	private void popularMaiusculasSeSelecionado() {
@@ -228,7 +258,7 @@ public class RandomString {
 	}
 
 	private Integer randomizarIndex() {
-		int indexFinal = caracteres.size() - 1;
+		int indexFinal = caracteresDisponiveis.size() - 1;
 		Integer numeroAleatorio = fazerLoopParaRandom(indexFinal);
 		return numeroAleatorio;
 	}
@@ -236,7 +266,8 @@ public class RandomString {
 	private Integer fazerLoopParaRandom(int indexFinal) {
 		Integer numeroAleatorio = null;
 		while (true) {
-			numeroAleatorio = ThreadLocalRandom.current().nextInt(0, indexFinal);
+			int indexFinalMaisUm = indexFinal + 1;
+			numeroAleatorio = ThreadLocalRandom.current().nextInt(0, indexFinalMaisUm);
 			boolean continuaLoop = continuaLoopParaRandom(numeroAleatorio);
 			if (!continuaLoop)
 				break;
@@ -245,22 +276,17 @@ public class RandomString {
 	}
 
 	private boolean continuaLoopParaRandom(int numeroAleatorio) {
-		boolean contains = jaInserido(numeroAleatorio);
 		boolean podeRepetir = podeRepetir();
-		if (contains && podeRepetir) {
+		if (podeRepetir) {
 			int quantidadeJaInserida = retornaQuantidadeJaInseridaDoIndex(numeroAleatorio);
 			if (quantidadeJaInserida < this.configuracao.getMaximoDeRepeticoesPermitidas())
-				contains = false;
+				return false;
 		}
-		return contains;
-	}
-
-	private boolean jaInserido(int numeroAleatorio) {
-		return indexesJaInseridos.contains(numeroAleatorio);
+		return podeRepetir;
 	}
 
 	private boolean podeRepetir() {
-		return Objects.nonNull(configuracao) && configuracao.getMaximoDeRepeticoesPermitidas() > 1;
+		return Objects.nonNull(configuracao) && configuracao.getMaximoDeRepeticoesPermitidas() > 0;
 	}
 
 	private int retornaQuantidadeJaInseridaDoIndex(int numeroAleatorio) {
@@ -272,11 +298,21 @@ public class RandomString {
 
 	private void validarTamanhoSenha(int tamanhoSenha) {
 		if (tamanhoSenha <= 0)
-			throw new RuntimeException("O tamanho da senha não pode ser igual ou menor que 0");
+			throw new RuntimeException("O tamanho da senha deve ser maior que 0");
 	}
 
 	private Character getCaractere(int index) {
-		return (Objects.nonNull(caracteres) && !caracteres.isEmpty()) ? caracteres.get(index) : null;
+		return (Objects.nonNull(caracteresDisponiveis) && !caracteresDisponiveis.isEmpty())
+				? caracteresDisponiveis.get(index)
+				: null;
+	}
+
+	public List<Character> getCaracteresDisponiveis() {
+		return caracteresDisponiveis;
+	}
+
+	public void setCaracteresDisponiveis(List<Character> caracteresDisponiveis) {
+		this.caracteresDisponiveis = caracteresDisponiveis;
 	}
 
 }
