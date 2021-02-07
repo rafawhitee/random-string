@@ -96,4 +96,4 @@ String randomExceptionThree = rs.maiusculas(Arrays.asList('a')).tamanho(1).rando
 ```
 
 # License
-MIT
+[MIT](https://github.com/rafawhitee/random-string/blob/main/LICENSE.txt)
