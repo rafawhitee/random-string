@@ -13,7 +13,7 @@ private boolean caracteresEspeciais; // Se irá incluir caracteres especiais no 
 private boolean numeros; // Se irá incluir números no resultado
 private boolean uuid; // Se irá gerar um Identificador Único Global (irá ignorar as outras configurações)
 private int tamanho; // Tamanho que irá ser gerado (Default 6)
-private int maximoDeRepeticoesPermitidas; // Se poderá repetir algum caractere (Default 1).
+private int maximoDeRepeticoesPermitidas; // Se poderá repetir algum caractere (Default 0).
 ```
 
 Os caracteres especiais que RandomString pode incluir no resultado são: <b> ! # $ % & * + / ? _ | ~ </b>
@@ -52,11 +52,41 @@ RandomString rs = new RandomString();
 String resultWithSpecialChars = rs.caracteresEspeciais().random();
 ```
 
+### Podendo Repetir
+O método repetir da classe RandomString recebe um inteiro que é o número de repetições permitidos. Se você passar 1, ele irá pode repetir apenas uma única vez, se passar 3, cada caractere poderá aparecer até 3 vezes no resultado. Lembrando que o default é 0, caso não altere isso.
+```java
+RandomString rs = new RandomString();
+String resultThatCanBeRepeatChars = rs.repetir(1).random();
+```
+
 ## Agrupando várias configurações
 Você pode juntar várias configurações, como por exemplo
 ```java
 RandomString rs = new RandomString();
-String resultWithSpecialCharsAndSize8 = rs.tamanho(12).caracteresEspeciais().random();
+String resultWithSpecialCharsSize12AndCanRepeatTwice = rs.tamanho(12).repetir(2).caracteresEspeciais().random();
 String resultWithSpecialCharsAndSize8 = rs.tamanho(8).caracteresEspeciais().random();
-String resultUpperCaseSize15AndSpecialChars = rs.maiusculas().tamanho(15).caracteresEspeciais().random();
+String resultLowerCaseSize15AndSpecialChars = rs.minusculas().tamanho(15).caracteresEspeciais().random();
 ```
+
+### Restrições
+Você pode alterar os caracteres especiais, minúsculos ou maiúsculas com restrições, por exemplo, se você quiser criar uma String que contenha somente os caracteres especiais # e $ ou as letras maiúsculas A, B, C e D.
+```java
+RandomString rs = new RandomString();
+String randomWithRestrictionOne = rs.maiusculas(Arrays.asList('A', 'B', 'C', 'D')).caracteresEspeciais(Arrays.asList('#', '$')).repetir(2).random();
+```
+
+<b> Observação:</b> como já mencionado o default do tamanho é 6, se você passar uma lista com restrições menor que o tamanho FINAL e sem repetição, irá ser lançado uma Exception falando que não é possível randomizar por falta de caractere.
+
+Exemplos que irão lançar Exception
+```java
+RandomString rs = new RandomString();
+// Irá lançar Exception pois está passando 3 maiusculas e 2 especiais, totalizando 5, mas por o default é tamanho 6, logo não será possível randomizar.
+String randomExceptionOne = rs.maiusculas(Arrays.asList('A', 'B', 'C')).caracteresEspeciais(Arrays.asList('#', '$')).random();
+
+// Irá lançar também Exception, pois você está passando uma lista com um único caractere e o tamanho 2.
+String randomExceptionTwo = rs.maiusculas(Arrays.asList('A')).tamanho(2).random();
+
+// Irá lançar também Exception, pois está passando o caractere minúsculo 'a' como parâmetro de restrição para maiusculas, irá lançar que é um Caractere Inválido.
+String randomExceptionThree = rs.maiusculas(Arrays.asList('a')).tamanho(1).random();
+```
+
