@@ -89,7 +89,7 @@ String randomWithRestrictionTwo = rs.maiusculas(restrictionsUpperCase).minuscula
 Exemplos que irão lançar Exception
 ```java
 RandomString rs = new RandomString();
-// Irá lançar Exception pois está passando 3 maiusculas e 2 especiais, totalizando 5, mas por o default é tamanho 6, logo não será possível randomizar.
+// Irá lançar Exception pois está passando 3 maiusculas e 2 especiais, totalizando 5, mas por padrão, o tamanho é 6, logo não será possível randomizar.
 String randomExceptionOne = rs.maiusculas(Arrays.asList('A', 'B', 'C')).caracteresEspeciais(Arrays.asList('#', '$')).random();
 
 // Irá lançar também Exception, pois você está passando uma lista com um único caractere e o tamanho 2.
