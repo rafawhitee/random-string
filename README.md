@@ -40,7 +40,7 @@ String resultLowerCase = rs.minusculas().random();
 ```
 
 ### UUID
-Vai criar um Identificador Único Global (UUID da classe java.util) no formato em String, ele irá ignorar as outras configurações (tamanho mínimo, tamanho máximo, etc).
+Cria um Identificador Único Global 
 ```java
 RandomString rs = new RandomString();
 String resultUuid = rs.uuid().random();
@@ -53,14 +53,18 @@ String resultWithSpecialChars = rs.caracteresEspeciais().random();
 ```
 
 ### Podendo Repetir
-O método repetir da classe RandomString recebe um inteiro que é o número de repetições permitidos. Se você passar 1, ele irá pode repetir apenas uma única vez, se passar 3, cada caractere poderá aparecer até 3 vezes no resultado. Lembrando que o default é 0, caso não altere isso.
+O método repetir da classe RandomString recebe um inteiro que é o número de repetições permitidos.
 ```java
 RandomString rs = new RandomString();
-String resultThatCanBeRepeatChars = rs.repetir(1).random();
+// Pode repetir até 1 vez cada caractere
+String resultThatCanBeRepeatOneTimeChars = rs.repetir(1).random();
+
+// Pode repetir até 3 vezes cada caractere
+String resultThatCanBeRepeatThreeTimesChars = rs.repetir(3).random();
 ```
 
 ### Agrupando várias configurações
-Você pode juntar várias configurações, como por exemplo
+Você pode juntar várias configurações, como por exemplo: mudar o tamanho para 12, colocar para poder repetir 2 vezes, etc.
 ```java
 RandomString rs = new RandomString();
 String resultWithSpecialCharsSize12AndCanRepeatTwice = rs.tamanho(12).repetir(2).caracteresEspeciais().random();
@@ -69,7 +73,7 @@ String resultLowerCaseSize15AndSpecialChars = rs.minusculas().tamanho(15).caract
 ```
 
 ### Restrições
-Você pode alterar os caracteres especiais, minúsculos ou maiúsculas com restrições, por exemplo, se você quiser criar uma String que contenha somente os caracteres especiais # e $ ou as letras maiúsculas A, B, C e D.
+Você pode alterar os caracteres especiais, minúsculos ou maiúsculas, um exemplo: se você quiser criar uma string que contenha somente os caracteres especiais <b> # e $ </b> ou as letras maiúsculas <b> A, B, C e D </b> .
 ```java
 RandomString rs = new RandomString();
 String randomWithRestrictionOne = rs.maiusculas(Arrays.asList('A', 'B', 'C', 'D')).caracteresEspeciais(Arrays.asList('#', '$')).repetir(2).random();
