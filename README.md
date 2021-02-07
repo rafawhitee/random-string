@@ -81,7 +81,7 @@ String randomWithRestrictionOne = rs.maiusculas(Arrays.asList('A', 'B', 'C', 'D'
 List<Character> restrictionsUpperCase = Arrays.asList('A', 'B', 'C', 'D');
 List<Character> restrictionsLowerCase = Arrays.asList('z', 'b', 'k', 'l', 'x');
 List<Character> restrictionsSpecialChars = Arrays.asList('&');
-String randomWithRestrictionTwo = rs.maiusculas(restrictionsUpperCase).minusculas(restrictionsLowerCase).caracteresEspeciais(restrictionsSpecialChars).random();(caracteresEspeciais(restrictionsSpecialChars).random();
+String randomWithRestrictionTwo = rs.maiusculas(restrictionsUpperCase).minusculas(restrictionsLowerCase).caracteresEspeciais(restrictionsSpecialChars).random();
 ```
 
 <b> Observação:</b> como já mencionado o default do tamanho é 6, se você passar uma lista com restrições menor que o tamanho FINAL e sem repetição, irá ser lançado uma Exception falando que não é possível randomizar por falta de caractere.
