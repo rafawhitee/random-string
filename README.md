@@ -1,5 +1,5 @@
 # Random String
-Biblioteca que gera string aleatórias a partir de configuração, como por exmeplo: tamanho, uuid, caracteres especiais, números, etc.
+Biblioteca que gera string aleatórias a partir de configurações, tais como: tamanho, uuid, caracteres especiais, números, pode repetir, entre outras.
 
 
 # Usage
@@ -18,35 +18,35 @@ private int maximoDeRepeticoesPermitidas; // Se poderá repetir algum caractere 
 
 Os caracteres especiais que RandomString pode incluir no resultado são: <b> ! # $ % & * + / ? _ | ~ </b>
 
-## Todas as configurações
+### Todas as configurações
 Caso você inicialize o Random String e chame direto o random, ele irá colocar todas as configurações como true.
 ```java
 RandomString rs = new RandomString();
 String resultWithAllConfigs = rs.random();
 ```
 
-## Tamanho
+### Tamanho
 ```java
 RandomString rs = new RandomString();
 String resultWithSize5 = rs.tamanho(5).random();
 String resultWithSize12 = rs.tamanho(12).random();
 ```
 
-## Maiúsculas e Minúsculas
+### Maiúsculas e Minúsculas
 ```java
 RandomString rs = new RandomString();
 String resultUpperCase = rs.maiusculas().random();
 String resultLowerCase = rs.minusculas().random();
 ```
 
-## UUID
+### UUID
 Vai criar um Identificador Único Global (UUID da classe java.util) no formato em String, ele irá ignorar as outras configurações (tamanho mínimo, tamanho máximo, etc).
 ```java
 RandomString rs = new RandomString();
 String resultUuid = rs.uuid().random();
 ```
 
-## Caracteres Especiais
+### Caracteres Especiais
 ```java
 RandomString rs = new RandomString();
 String resultWithSpecialChars = rs.caracteresEspeciais().random();
@@ -59,7 +59,7 @@ RandomString rs = new RandomString();
 String resultThatCanBeRepeatChars = rs.repetir(1).random();
 ```
 
-## Agrupando várias configurações
+### Agrupando várias configurações
 Você pode juntar várias configurações, como por exemplo
 ```java
 RandomString rs = new RandomString();
@@ -68,7 +68,7 @@ String resultWithSpecialCharsAndSize8 = rs.tamanho(8).caracteresEspeciais().rand
 String resultLowerCaseSize15AndSpecialChars = rs.minusculas().tamanho(15).caracteresEspeciais().random();
 ```
 
-## Restrições
+### Restrições
 Você pode alterar os caracteres especiais, minúsculos ou maiúsculas com restrições, por exemplo, se você quiser criar uma String que contenha somente os caracteres especiais # e $ ou as letras maiúsculas A, B, C e D.
 ```java
 RandomString rs = new RandomString();
@@ -95,9 +95,5 @@ String randomExceptionTwo = rs.maiusculas(Arrays.asList('A')).tamanho(2).random(
 String randomExceptionThree = rs.maiusculas(Arrays.asList('a')).tamanho(1).random();
 ```
 
-## Contributing
-Rafael Nunes e Silva - Analista de Sistemas e Desenvolvedor Java
-
-## License
+# License
 MIT
-
